@@ -1,8 +1,8 @@
-# Test Store
+# 404 TechStore Backend
 
 ## Descripción
 
-Este repositorio contiene el código fuente para Test Store, una aplicación [breve descripción de la aplicación].
+Este repositorio contiene el código fuente para el backend de 404TechStore.
 
 ## Requisitos previos
 

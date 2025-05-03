@@ -8,7 +8,7 @@ class CreateProductos < ActiveRecord::Migration[8.0]
       t.float :discountPercentage
       t.integer :rating
       t.integer :stock
-      t.string :tags
+      t.string :tags, array: true, default: []
       t.string :thumbail
 
       t.timestamps

@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   resources :usuarios
   resources :suggestions
   resources :ai
+  # resources :auth
 
   get "up" => "rails/health#show", as: :rails_health_check
 
@@ -14,19 +15,10 @@ Rails.application.routes.draw do
   put 'products/:id' => 'productos#update'
   delete 'products/:id' => 'productos#destroy'
 
-  # Rutas de usuarios
-  get 'users' => 'usuarios#index'
-  get 'users/:id' => 'usuarios#show'
-  post 'users' => 'usuarios#create'
-  put 'users/:id' => 'usuarios#update'
-  delete 'users/:id' => 'usuarios#destroy'
-
-  post 'login' => 'usuarios#login'
-
-  # Rutas de AI
-  get 'ai' => 'suggestions#index'
-  get 'ai/:id' => 'suggestions#show'
-  
+  # Rutas de AI  
   post 'ai/ask' => 'ai#ask'
 
+  # Rutas de authenticación
+  post 'auth/register' => 'auth#register'
+  post 'auth/login' => 'auth#login'
 end

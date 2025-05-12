@@ -49,3 +49,5 @@ end
 gem "dotenv-rails", "~> 3.1"
 
 gem "gemini-ai", "~> 4.2"
+
+gem "firebase_id_token"

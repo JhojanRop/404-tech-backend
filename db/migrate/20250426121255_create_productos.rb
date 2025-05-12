@@ -3,12 +3,16 @@ class CreateProductos < ActiveRecord::Migration[8.0]
     create_table :productos do |t|
       t.string :title
       t.string :description
-      t.string :category
+      t.string :category, default: '[]'
+      t.string :brand, default: '[]'
+      t.string :image, default: '[]'
       t.float :price
+      t.float :oldPrice
+      t.boolean :onSale
       t.float :discountPercentage
       t.integer :rating
       t.integer :stock
-      t.string :tags, array: true, default: []
+      t.string :tags, default: '[]'
       t.string :thumbail
 
       t.timestamps

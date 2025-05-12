@@ -21,6 +21,8 @@ Rails.application.routes.draw do
   put 'users/:id' => 'usuarios#update'
   delete 'users/:id' => 'usuarios#destroy'
 
+  post 'login' => 'usuarios#login'
+
   # Defines the root path route ("/")
   # root "posts#index"
 end

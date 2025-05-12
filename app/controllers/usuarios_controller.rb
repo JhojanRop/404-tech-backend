@@ -9,6 +9,15 @@ class UsuariosController < ApplicationController
         render json: usuario
     end
 
+    def login
+        usuario = Usuario.find_by(email: params[:email])
+        if usuario && usuario.authenticate(params[:password])
+            render json: { message: 'Login successful', usuario: usuario }
+        else
+            render json: { message: 'Invalid email or password' }, status: :unauthorized
+        end
+    end
+
     def create
         usuario = Usuario.create(
             username: params[:username],

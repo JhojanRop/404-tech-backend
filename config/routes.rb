@@ -1,10 +1,10 @@
 Rails.application.routes.draw do
   resources :productos
   resources :reviews
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  resources :usuarios
+  resources :suggestions
+  resources :ai
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
 
   # Ruta de productos
@@ -23,6 +23,10 @@ Rails.application.routes.draw do
 
   post 'login' => 'usuarios#login'
 
-  # Defines the root path route ("/")
-  # root "posts#index"
+  # Rutas de AI
+  get 'ai' => 'suggestions#index'
+  get 'ai/:id' => 'suggestions#show'
+  
+  post 'ai/ask' => 'ai#ask'
+
 end

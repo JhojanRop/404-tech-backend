@@ -30,3 +30,6 @@
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+
+/config/ecomers-e2928-df0ecfc017be.json
+/config/noted-palisade-404414-16ca1d04129c.json

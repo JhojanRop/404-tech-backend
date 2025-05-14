@@ -1,53 +1,92 @@
-class ProductosController < ApplicationController
+class ProductosController < ActionController::API
     def index
-        productos = Producto.all
-        render json: productos
-    end
-
-    def show
-        producto = Producto.find(params[:id])
-        render json: producto
+        products = []
+        PRODUCTS_REF.get do |doc|
+            products << doc.data.merge(id: doc.document_id)
+        end
+        render json: products
+    rescue => e
+        render json: { error: e.message }, status: :internal_server_error
     end
 
     def create
-        producto = Producto.create(
-            title: params[:title],
-            description: params[:description],
-            category: params[:category],
-            price: params[:price],
-            discountPercentage: params[:discountPercentage],
-            rating: params[:rating],
-            stock: params[:stock],
-            tags: params[:tags],
-            thumbail: params[:thumbail]
-        )
-        render json: producto
+    product = params[:product]
+    if product.blank?
+        render json: { error: "Faltan parametros" }, status: :bad_request
+        return
     end
 
-    def update
-        producto = Producto.find(params[:id])
-        producto.update(producto_params)
-        render json: producto
+    # Limpia campos vacíos (hashes o arrays vacíos)
+    product = product.reject { |_, v| v == {} || v == [] }
+
+    # CONVIERTE A HASH PLANO
+    product = product.to_unsafe_h if product.respond_to?(:to_unsafe_h)
+
+    Rails.logger.info "Producto a guardar en Firestore: #{product.inspect}"
+
+    begin
+        PRODUCTS_REF.add(product)
+        render json: { message: "Producto creado" }, status: :created
+    rescue => e
+        Rails.logger.error "Error al crear producto: #{e.message}"
+        Rails.logger.error e.backtrace.join("\n")
+        render json: { error: e.message }, status: :internal_server_error
+    end
+end
+
+    def delete
+        id = params[:id]
+        if id.blank?
+            render json: { error: "Faltan parametros" }, status: :bad_request
+            return
+        end
+
+        begin
+            product_ref = PRODUCTS_REF.document(id)
+            product_ref.delete
+            render json: { message: "Producto eliminado" }, status: :ok
+        rescue => e
+            render json: { error: e.message }, status: :internal_server_error
+        end
     end
 
-    def destroy
-        producto = Producto.find(params[:id])
-        producto.destroy
-        render json: { message: 'Producto deleted' }
+   def update
+        id = params[:id]
+        product = params[:product]
+        if id.blank? || product.blank?
+            render json: { error: "Faltan parametros" }, status: :bad_request
+            return
+        end
+
+        # Convierte a hash plano si es necesario
+        product = product.to_unsafe_h if product.respond_to?(:to_unsafe_h)
+
+        begin
+            product_ref = PRODUCTS_REF.document(id)
+            product_ref.update(product)
+            render json: { message: "Producto actualizado" }, status: :ok
+        rescue => e
+            Rails.logger.error "Error al actualizar producto: #{e.message}"
+            Rails.logger.error e.backtrace.join("\n")
+            render json: { error: e.message }, status: :internal_server_error
+        end
     end
 
-    private
+    def filter_products
+        category = params[:category]
+        price = params[:price]
 
-    def producto_params
-        params.require(:producto).permit(:title, 
-                                            :description, 
-                                            :category, 
-                                            :price, 
-                                            :discountPercentage, 
-                                            :rating, 
-                                            :stock, 
-                                            :tags, 
-                                            :thumbail
-                                        )
+        # Aquí filtras tus productos según los parámetros recibidos
+        # Ejemplo si usas Firestore:
+        query = PRODUCTS_REF
+        query = query.where("category", "array-contains", category) if category.present?
+        query = query.where("price", "==", price.to_f) if price.present?
+
+        products = []
+        query.get.each do |doc|
+            products << doc.data.merge(id: doc.document_id)
+        end
+
+        render json: products
     end
 end

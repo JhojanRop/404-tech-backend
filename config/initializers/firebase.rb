@@ -1,5 +1,8 @@
-require 'firebase_id_token'
+require 'google/cloud/firestore'
 
-FirebaseIdToken.configure do |config|
-    config.project_ids = [ENV['FIREBASE_PROJECT_ID']] # Replace with your Firebase project ID
-end
+firestore = Google::Cloud::Firestore.new(
+  project_id: ENV['FIREBASE_PROJECT_ID'],
+  credentials: ENV['GOOGLE_APPLICATION_CREDENTIALS']
+)
+
+PRODUCTS_REF = firestore.col('Products')

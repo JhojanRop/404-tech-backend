@@ -54,3 +54,5 @@ gem "gemini-ai", "~> 4.2"
 
 gem "firebase_id_token"
 gem "google-cloud-firestore"
+
+gem 'jwt'

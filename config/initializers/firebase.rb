@@ -6,3 +6,5 @@ firestore = Google::Cloud::Firestore.new(
 )
 
 PRODUCTS_REF = firestore.col('Products')
+CART_REF = firestore.col('Cart')
+USER_REF = firestore.col('Users')

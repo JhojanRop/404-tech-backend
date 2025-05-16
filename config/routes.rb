@@ -15,6 +15,12 @@ Rails.application.routes.draw do
   put 'products/:id' => 'productos#update'
   get 'products/filter' => 'productos#filter_products'
 
+  # Ruta de carrito
+  get 'cart' => 'cart#index'
+  post 'cart' => 'cart#create'
+  delete 'cart/:id' => 'cart#delete'
+  delete 'cart/remove_items' => 'cart#remove_items'
+
   # Rutas de AI
   post 'ai/ask' => 'ai#ask'
 

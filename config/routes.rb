@@ -24,4 +24,5 @@ Rails.application.routes.draw do
 
   # Rutas de usuarios
   get 'usuarios' => 'usuarios#index'
+  post 'usuarios/login' => 'usuarios#login'
 end

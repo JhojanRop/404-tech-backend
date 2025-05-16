@@ -404,6 +404,7 @@ DEPENDENCIES
   firebase_id_token
   gemini-ai (~> 4.2)
   google-cloud-firestore
+  jwt
   kamal
   puma (>= 5.0)
   rack-cors

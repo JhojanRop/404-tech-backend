@@ -10,29 +10,29 @@ class ProductosController < ActionController::API
     end
 
     def create
-    product = params[:product]
-    if product.blank?
-        render json: { error: "Faltan parametros" }, status: :bad_request
-        return
+        product = params[:product]
+        if product.blank?
+            render json: { error: "Faltan parametros" }, status: :bad_request
+            return
+        end
+
+        # Limpia campos vacíos (hashes o arrays vacíos)
+        product = product.reject { |_, v| v == {} || v == [] }
+
+        # CONVIERTE A HASH PLANO
+        product = product.to_unsafe_h if product.respond_to?(:to_unsafe_h)
+
+        Rails.logger.info "Producto a guardar en Firestore: #{product.inspect}"
+
+        begin
+            PRODUCTS_REF.add(product)
+            render json: { message: "Producto creado" }, status: :created
+        rescue => e
+            Rails.logger.error "Error al crear producto: #{e.message}"
+            Rails.logger.error e.backtrace.join("\n")
+            render json: { error: e.message }, status: :internal_server_error
+        end
     end
-
-    # Limpia campos vacíos (hashes o arrays vacíos)
-    product = product.reject { |_, v| v == {} || v == [] }
-
-    # CONVIERTE A HASH PLANO
-    product = product.to_unsafe_h if product.respond_to?(:to_unsafe_h)
-
-    Rails.logger.info "Producto a guardar en Firestore: #{product.inspect}"
-
-    begin
-        PRODUCTS_REF.add(product)
-        render json: { message: "Producto creado" }, status: :created
-    rescue => e
-        Rails.logger.error "Error al crear producto: #{e.message}"
-        Rails.logger.error e.backtrace.join("\n")
-        render json: { error: e.message }, status: :internal_server_error
-    end
-end
 
     def delete
         id = params[:id]

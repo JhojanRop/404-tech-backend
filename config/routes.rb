@@ -1,10 +1,7 @@
 Rails.application.routes.draw do
   resources :productos
-  resources :reviews
   resources :usuarios
   resources :suggestions
-  # resources :ai
-  # resources :auth
 
   get "up" => "rails/health#show", as: :rails_health_check
 
@@ -24,11 +21,8 @@ Rails.application.routes.draw do
   # Rutas de AI
   post 'ai/ask' => 'ai#ask'
 
-  # Rutas de authenticación
-  post 'auth/register' => 'auth#register'
-  post 'auth/login' => 'auth#login'
-
   # Rutas de usuarios
   get 'usuarios' => 'usuarios#index'
   post 'login' => 'usuarios#login'
+  post 'register' => 'usuarios#register'
 end

@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   delete 'products/:id' => 'productos#delete'
   put 'products/:id' => 'productos#update'
   get 'products/filter' => 'productos#filter_products'
+  get 'products/:id' => 'productos#show'
 
   # Ruta de carrito
   get 'cart' => 'cart#index'

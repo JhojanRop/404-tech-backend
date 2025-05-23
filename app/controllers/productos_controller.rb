@@ -34,6 +34,28 @@ class ProductosController < ActionController::API
         end
     end
 
+    def show
+        id = params[:id]
+        if id.blank?
+            render json: { error: "Faltan parametros" }, status: :bad_request
+            return
+        end
+
+        begin
+            product_ref = PRODUCTS_REF.document(id)
+            product = product_ref.get
+            if product.exists?
+                render json: product.data.merge(id: product.document_id), status: :ok
+            else
+                render json: { error: "Producto no encontrado" }, status: :not_found
+            end
+        rescue => e
+            Rails.logger.error "Error al obtener producto: #{e.message}"
+            Rails.logger.error e.backtrace.join("\n")
+            render json: { error: e.message }, status: :internal_server_error
+        end
+    end
+
     def delete
         id = params[:id]
         if id.blank?
@@ -75,6 +97,16 @@ class ProductosController < ActionController::API
     def filter_products
         category = params[:category]
         price = params[:price]
+        brand = params[:brand]
+        title = params[:title]
+
+        if category.blank?
+            || price.blank? 
+            || brand.blank? 
+            || title.blank?
+            render json: { error: "Faltan parametros" }, status: :bad_request
+            return
+        end
 
         # Aquí filtras tus productos según los parámetros recibidos
         # Ejemplo si usas Firestore:

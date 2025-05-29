@@ -18,7 +18,7 @@ class AiController < ApplicationController
       contents: [
         {
           parts: [
-            { text: question }
+            { text: "Respondeme la siguiente pregunta en menos de 200 palabras: " + question + ". Solo quiero que me devuelvas texto y no le des formato" }
           ]
         }
       ]

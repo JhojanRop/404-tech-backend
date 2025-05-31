@@ -100,10 +100,10 @@ class ProductosController < ActionController::API
         brand = params[:brand]
         title = params[:title]
 
-        if category.blank?
-            || price.blank? 
-            || brand.blank? 
-            || title.blank?
+        if category.blank? ||
+            price.blank? ||
+            brand.blank? ||
+            title.blank?
             render json: { error: "Faltan parametros" }, status: :bad_request
             return
         end

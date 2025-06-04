@@ -100,19 +100,13 @@ class ProductosController < ActionController::API
         brand = params[:brand]
         title = params[:title]
 
-        if category.blank?
-            || price.blank? 
-            || brand.blank? 
-            || title.blank?
-            render json: { error: "Faltan parametros" }, status: :bad_request
-            return
-        end
-
         # Aquí filtras tus productos según los parámetros recibidos
         # Ejemplo si usas Firestore:
         query = PRODUCTS_REF
         query = query.where("category", "array-contains", category) if category.present?
         query = query.where("price", "==", price.to_f) if price.present?
+        query = query.where("brand", "==", brand) if brand.present?
+        query = query.where("title", "==", title) if title.present?
 
         products = []
         query.get.each do |doc|
